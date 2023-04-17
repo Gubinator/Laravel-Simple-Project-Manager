@@ -30,32 +30,32 @@
         <div class="d-flex flex-column align-items-center pt-5">
             <h1>New project</h1>
             <div style="width:40%;">
-                <form action="{{ url('task')}}" method="POST">
+                <form action="{{ url('projects')}}" method="POST">
                 {{ csrf_field() }}
                 <div class="form-group">
                     <div class="pb-2">
                         <label for="task-name" class="controllabel">Project name</label>
-                        <input type="text" name="name" id="taskname" class="form-control" value="{{ old('task') }}" required>
+                        <input type="text" name="name" id="taskname" class="form-control" required>
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel">Project description</label>
-                        <input type="text" name="name" id="taskname" class="form-control" value="{{ old('task') }}" required>
+                        <input type="text" name="description" id="taskname" class="form-control" required>
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel">Project price</label>
-                        <input type="number" name="name" id="taskname" class="form-control" value="{{ old('task') }}" required>
+                        <input type="number" name="price" id="taskname" class="form-control" required>
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel">Included tasks</label>
-                        <input type="text" name="name" id="taskname" class="form-control" value="{{ old('task') }}" required>
+                        <input type="text" name="tasks" id="taskname" class="form-control" required>
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel" style="width: 8rem">Start date</label>
-                        <input type="date"  />
+                        <input type="date" name="start_date"  required />
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel" style="width: 8rem">End date</label>
-                        <input type="date"  />
+                        <input type="date" name="end_date"  required />
                     </div>
 
                 </div>
