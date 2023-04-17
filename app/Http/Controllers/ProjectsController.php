@@ -12,6 +12,10 @@ class ProjectsController extends Controller
 
         $projects = Project::all();
 
+        if (!session()->has('user')) {
+            return redirect('/login');
+        }
+
         return view('projects/index', [
             'projects' => $projects
         ]);

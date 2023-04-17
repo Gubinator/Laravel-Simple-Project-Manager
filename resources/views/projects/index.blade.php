@@ -51,11 +51,11 @@
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel" style="width: 8rem">Start date</label>
-                        <input type="date" name="start_date"  required />
+                        <input type="date" name="start_date" id="start_date" onchange="dateChecker()"  required />
                     </div>
                     <div class="pb-2">
                         <label for="task-name" class="controllabel" style="width: 8rem">End date</label>
-                        <input type="date" name="end_date"  required />
+                        <input type="date" name="end_date" id="end_date" onchange="dateChecker()"  required />
                     </div>
 
                 </div>
@@ -105,5 +105,25 @@
         </div>
     </div>
 @endsection
+
+<script> 
+function dateChecker() {
+    var startDate = new Date(document.getElementById("start_date").value).getTime();
+    var endDate = new Date(document.getElementById("end_date").value).getTime();
+    console.log("2");
+    console.log(startDate + "    " + endDate );
+    if(isNaN(startDate) || isNaN(endDate)){
+        console.log(startDate + "    " + endDate );
+     } else{
+        if (startDate > endDate) {
+          alert("End date must come later than start date.");
+          document.getElementById("start_date").value = "";
+          document.getElementById("end_date").value = "";   
+          return false;
+     }
+    }
+
+}
+</script>
 
 

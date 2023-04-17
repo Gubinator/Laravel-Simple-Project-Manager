@@ -34,9 +34,11 @@ Route::post(
     function (Request $request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
+            'start_date' => 'required|before_or_equal:end_date',
+            'end_date' => 'required|date',
         ]);
         if ($validator->fails()) {
-            return redirect('/')
+            return redirect('/projects')
                 ->withInput()
                 ->withErrors($validator);
         }
