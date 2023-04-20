@@ -4,9 +4,9 @@
 Simple project manager in Larevel
 
 
-### Project requirements 
+## Project requirements 
 
-- **Create a new Laravel installation that will be in the projects directory. the app is a must have
+- Create a new Laravel installation that will be in the projects directory. the app is a must have
 the possibility of registering new users (users register themselves). Users must be able to
 log in and log out.**
 - **It is necessary to make a new migration for the project table in which users will keep records of their own
@@ -22,6 +22,6 @@ jobs done.**
 
 ## First look
 
-<p align="center"><img src="https://i.imgur.com/EYX3kx1.png" width="400" style="padding-bottom:20px;"></p>.
+<p align="center"><img src="https://i.imgur.com/EYX3kx1.png"  style="padding-bottom:20px;"></p>.
 
-<p align="center"><img src="https://i.imgur.com/E2EvYM4.png" width="400" style="padding-bottom:20px;"></p>.
+<p align="center"><img src="https://i.imgur.com/E2EvYM4.png" style="padding-bottom:20px;"></p>.
