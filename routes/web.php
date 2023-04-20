@@ -4,6 +4,7 @@ use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
 use Illuminate\Http\Request;
+use App\Models\UserProject;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('p
 Route::post(
     '/projects',
     function (Request $request) {
+        $user = auth()->user();
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'start_date' => 'required|before_or_equal:end_date',
@@ -43,6 +45,7 @@ Route::post(
                 ->withErrors($validator);
         }
         $project = new Project;
+        
         $project->project_name = $request->name;
         $project->project_description = $request->description;
         $project->project_price = $request->price;
@@ -50,6 +53,15 @@ Route::post(
         $project->start_date = $request->start_date;
         $project->end_date = $request->end_date;
         $project->save();
+        $user->projects()->attach($user->id, [
+            'permission' => 1,
+            'project_id' => $project->id
+        ]);
+
+        $associatePivot = new 
+        /*$user->projects()->attach([1,2],[
+            'permission' => 1
+        ]);*/
         return redirect('/projects');
     }
 );

@@ -5,21 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Project;
+use App\Models\User;
 
 class ProjectsController extends Controller
 {
     public function index(){
 
-        $projects = Project::all();
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+        $projects = $user->projects;
 
         if (!session()->has('user')) {
             return redirect('/login');
         }
-
+    
         return view('projects/index', [
             'projects' => $projects
         ]);
     }
+
+    public function addUser(Request $request, $projectId)
+{
+    $user = Auth::user();
+    $project = Project::findOrFail($projectId);
+    $project->users()->attach($user); 
+
+    return redirect()->back()->with('success', 'User added successfully');
+}
 
     public function destroy($id)
     {
@@ -27,14 +39,6 @@ class ProjectsController extends Controller
         $project->delete();
         return redirect('/projects');
     }
-
-    public function store(Request $request) {
-        $this->validate($request, [
-        'name' => 'required|max:255', ]);
-        $request->user()->tasks()->create([ 'name' =>
-        $request->name, ]);
-        return redirect('/tasks');
-        }
 }
 
 ?>

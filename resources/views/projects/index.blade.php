@@ -25,7 +25,6 @@
 @endsection
 
 
-
 @section('projects')
         <div class="d-flex flex-column align-items-center pt-5">
             <h1>New project</h1>
@@ -57,7 +56,17 @@
                         <label for="task-name" class="controllabel" style="width: 8rem">End date</label>
                         <input type="date" name="end_date" id="end_date" onchange="dateChecker()"  required />
                     </div>
-
+                </div>
+                <div class="form-group">
+                    <div class="d-flex flex-row pt-2">
+                        <label for="task-name" class="controllabel" style="width: 8rem">Assign to project:</label>
+                        @foreach ($nonUsers as $nonUser)
+                            <div style="display: flex; flex-flow: row wrap; align-items:center;  padding-right: 1rem;">
+                                <input type="checkbox" id="{{$nonUser->id}}" name="user{{$nonUser->id}}" value="" style="margin-right: 0.25rem;">
+                                <label> {{ $nonUser->name }}</label><br>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-6 pt-2">
@@ -68,6 +77,7 @@
                 </div>
                 </form>
         </div>
+        @if(count($projects)>1)
             <h1 class="font-weight-bold pt-5 pb-3">Projects</h1>
             <div class="container">
                 @foreach ($projects as $project)
@@ -104,13 +114,13 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 
 <script> 
 function dateChecker() {
     var startDate = new Date(document.getElementById("start_date").value).getTime();
     var endDate = new Date(document.getElementById("end_date").value).getTime();
-    console.log("2");
     console.log(startDate + "    " + endDate );
     if(isNaN(startDate) || isNaN(endDate)){
         console.log(startDate + "    " + endDate );
