@@ -11,8 +11,17 @@ class Project extends Model
 
     protected $table = 'projects';  
 
+    protected $fillable = [
+        'project_name',
+        'project_description',
+        'project_price',
+        'included_tasks',
+        'start_date',
+        'end_date'
+    ];
+
     public function users(){
-        return $this->belongsToMany(User::class, 'user_project', 'project_id');
+        return $this->belongsToMany(User::class, 'user_project', 'project_id')->withPivot('permission');;
     }
 
     

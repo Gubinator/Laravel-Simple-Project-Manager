@@ -4,6 +4,7 @@ use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\UserProject;
 
 /*
@@ -30,6 +31,8 @@ Route::get('/projects', [ProjectsController::class, 'index']);
 
 Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 
+Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
+
 Route::post(
     '/projects',
     function (Request $request) {
@@ -45,7 +48,7 @@ Route::post(
                 ->withErrors($validator);
         }
         $project = new Project;
-        
+
         $project->project_name = $request->name;
         $project->project_description = $request->description;
         $project->project_price = $request->price;
@@ -53,14 +56,36 @@ Route::post(
         $project->start_date = $request->start_date;
         $project->end_date = $request->end_date;
         $project->save();
+
+
         $user->projects()->attach($user->id, [
             'permission' => 1,
             'project_id' => $project->id
         ]);
 
-        $associatePivot = new 
+
+        $associates = $request->input('associates');
+        if ($associates) {
+            foreach ($associates as $associateId) {
+                $user->projects()->attach($associateId, [
+                    'permission' => 2,
+                    'project_id' => $project->id,
+                    'user_id' => $associateId
+                ]);
+            }
+        }
+
+        /*$selectedUserIds = array_keys($request->all('user*'));
+        foreach ($selectedUserIds as $userId) {
+        $user = User::find($userId);
+        $user->projects()->attach($project->id, [
+        'permission' => 2,
+        ]);
+        }*/
+
+
         /*$user->projects()->attach([1,2],[
-            'permission' => 1
+        'permission' => 1
         ]);*/
         return redirect('/projects');
     }

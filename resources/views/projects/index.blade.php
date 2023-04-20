@@ -24,7 +24,6 @@
 </div>
 @endsection
 
-
 @section('projects')
         <div class="d-flex flex-column align-items-center pt-5">
             <h1>New project</h1>
@@ -59,10 +58,12 @@
                 </div>
                 <div class="form-group">
                     <div class="d-flex flex-row pt-2">
-                        <label for="task-name" class="controllabel" style="width: 8rem">Assign to project:</label>
+                        @if (count($nonUsers)>0)
+                            <label for="task-name" class="controllabel" style="width: 8rem">Assign to project</label>
+                        @endif
                         @foreach ($nonUsers as $nonUser)
                             <div style="display: flex; flex-flow: row wrap; align-items:center;  padding-right: 1rem;">
-                                <input type="checkbox" id="{{$nonUser->id}}" name="user{{$nonUser->id}}" value="" style="margin-right: 0.25rem;">
+                                <input type="checkbox" id="{{$nonUser->id}}" name="associates[]" value="{{$nonUser->id}}" style="margin-right: 0.25rem;">
                                 <label> {{ $nonUser->name }}</label><br>
                             </div>
                         @endforeach
@@ -77,38 +78,90 @@
                 </div>
                 </form>
         </div>
-        @if(count($projects)>1)
+        @if(count($projects)>0)
             <h1 class="font-weight-bold pt-5 pb-3">Projects</h1>
             <div class="container">
                 @foreach ($projects as $project)
-                <ul class="card list-unstyled" style="padding: 10px 10px 10px 10px">
-                    <li>
-                        <span><b>Name: </b>{{$project->project_name}}</span>
-                    </li>
-                    <li>
-                        <span><b>Description: </b>{{$project->project_description}}</span>
-                    </li>
-                    <li>
-                        <span><b>Price: </b> {{$project->project_price}} €</span>
-                    </li>
-                    <li>
-                        <span><b>Tasks: </b>{{$project->included_tasks}}</span>
-                    </li>
-                    <li>
-                        <span><b>Start date: </b> {{$project->start_date}}</span>
-                    </li>
-                    <li>
-                        <span><b>End date: </b> {{$project->end_date}}</span>
-                    </li>
-                    <li class="pt-3">
-                        <form action="{{ url('projects/'.$project->id) }}" method="POST">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Delete
-                            </button>
-                        </form>
-                    </li>
+                    @if ($project->pivot->permission == 1)
+                    <ul class="card list-unstyled" style="padding: 10px 10px 10px 10px">
+                        <form action="{{url('projects/'.$project->id)}}" method="POST">
+                        <li>
+                            <span><b>Name: </b><input name="project_name" value="{{$project->project_name}}" style=" margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                            <span><b>Description: </b><input name="project_description" value="{{$project->project_description}}" style=" margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                            <span><b>Price (€): </b><input name="project_price"  value="{{$project->project_price}}" style=";margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                            <span><b>Tasks: </b><input name="included_tasks" value="{{$project->included_tasks}}" style="margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                            <span><b>Start date: </b><input name="start_date" value="{{$project->start_date}}" style="margin-bottom:8px; margin-left:8px" ></span>
+                        </li>
+                        <li>
+                            <span><b>End date: </b><input name="end_date" value="{{$project->end_date}}" style="margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                                {{ csrf_field() }}
+                                {{ method_field('PUT') }}
+                                <input type="hidden" name="_method" value="PUT">
+                                <button type="submit" class="btn btn-secondary" style="margin-top: 8px">
+                                    <i class="fa fa-btn fa-trash"></i>Update
+                                </button>
+                            </form>
+                        </li>
+                        <li class="d-flex">
+                            <form action="{{ url('projects/'.$project->id) }}" method="POST">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-btn fa-trash"></i>Delete
+                                </button>
+                            </form>
+                        </li>
+                </ul>
+                    @else
+                    <ul class="card list-unstyled" style="padding: 10px 10px 10px 10px">
+                        <form action="{{url('projects/'.$project->id)}}" method="POST">
+                        <li>
+                            <span><b>Name: </b><input name="project_name" readonly value="{{$project->project_name}}" style=" margin-bottom:8px; margin-left:8px; border: none;"></span>
+                        </li>
+                        <li>
+                            <span><b>Description: </b><input name="project_description" readonly value="{{$project->project_description}}" style=" margin-bottom:8px; margin-left:8px; border: none;"></span>
+                        </li>
+                        <li>
+                            <span><b>Price (€): </b><input name="project_price" readonly value="{{$project->project_price}}" style=";margin-bottom:8px; margin-left:8px; border: none;"></span>
+                        </li>
+                        <li>
+                            <span><b>Tasks: </b><input name="included_tasks" value="{{$project->included_tasks}}" style="margin-bottom:8px; margin-left:8px"></span>
+                        </li>
+                        <li>
+                            <span><b>Start date: </b><input name="start_date" readonly value="{{$project->start_date}}" style="margin-bottom:8px; margin-left:8px; border: none;" ></span>
+                        </li>
+                        <li>
+                            <span><b>End date: </b><input name="end_date" readonly value="{{$project->end_date}}" style="margin-bottom:8px; margin-left:8px; border: none;"></span>
+                        </li>
+                        <li>
+                                {{ csrf_field() }}
+                                {{ method_field('PUT') }}
+                                <input type="hidden" name="_method" value="PUT">
+                                <button type="submit" class="btn btn-secondary" style="margin-top: 8px">
+                                    <i class="fa fa-btn fa-trash"></i>Update
+                                </button>
+                        </li>
+                    </form>
+                        <li class="d-flex">
+                            <form action="{{ url('projects/'.$project->id) }}" method="POST">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-btn fa-trash"></i>Delete
+                                </button>
+                            </form>
+                        </li>
+                            @endif
                 </ul>
                 @endforeach
             </div>
@@ -118,6 +171,20 @@
 @endsection
 
 <script> 
+
+const editButtons = document.querySelectorAll('.edit-button');  
+editButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    console.log("vle");
+    const ulElement = this.closest('ul');
+    
+    // Remove the disabled attribute from all the <input> elements inside the <ul> element
+    const inputs = ulElement.querySelectorAll('input');
+    inputs.forEach(input => input.removeAttribute('disabled'));
+  });
+});
+
+console.log("s");
 function dateChecker() {
     var startDate = new Date(document.getElementById("start_date").value).getTime();
     var endDate = new Date(document.getElementById("end_date").value).getTime();
@@ -132,8 +199,9 @@ function dateChecker() {
           return false;
      }
     }
-
 }
+
+
 </script>
 
 
