@@ -38,15 +38,15 @@ class HomeController extends Controller
             $query->whereIn('id', $project_ids);
         })->get(); */
 
-        $nonUsers = User::whereNotIn('id', function($query) {
-            $user_id = auth()->user()->id;
-            $query->select('users.id')
-                  ->from('users')
-                  ->join('user_project', 'users.id', '=', 'user_project.user_id')
-                  ->join('projects', 'user_project.project_id', '=', 'projects.id')
-                  ->where('users.id', $user_id)
-                  ->pluck('users.id');
-        })->get();
+        $nonUsers = User::where('id', '!=', $user_id)
+                    ->whereNotIn('id', function ($query) use ($user_id) {
+                    $query->select('users.id')
+                        ->from('users')
+                        ->join('user_project', 'users.id', '=', 'user_project.user_id')
+                        ->join('projects', 'user_project.project_id', '=', 'projects.id')
+                        ->whereColumn('users.id', '!=', 'user_project.user_id')
+                        ->pluck('users.id');
+                })->get();
 
         return view('projects.index', [
             'projects' => $projects, 
